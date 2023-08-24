@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- ... Your existing head content ... -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Calculator</title>
+  <style>
+    /* ... Your existing CSS ... */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .calculator {
+      border: 1px solid #ccc;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .calculator h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #results {
+      margin-top: 15px;
+    }
+  
+    .histogram {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      margin-top: 20px; /* Adjust the margin as needed */
+    }
+
+    .histogram-bar {
+      width: 50px;
+      background-color: #007BFF;
+      text-align: center;
+      color: white;
+      font-size: 12px;
+      margin: 0 10px; /* Adjust the margin as needed */
+    }
+  </style>
+</head>
+
+
+<body>
+    <div class="calculator">
+      <h2>Pricing Calculator</h2>
+      <h3>Hevo Starter plan vs Fivetran Standard plan</h3>
+      <label for="input">Monthly Active Rows (MAR)</label>
+      <input type="range" id="input" min="1" max="4" step="1" value="2">
+      <div>Selected MAR: <span id="selectedMAR">4</span> Million</div>
+      <br>
+      <label for="plan">Select Plan:</label>
+      <select id="plan">
+        <option value="fivetran">Fivetran Standard Plan</option>
+      </select>
+      <div class="histogram" id="histogram"></div>
+    </div>
+  
+    <br>
+  
+    <script>
+      const inputSlider = document.getElementById("input");
+      const selectedMAR = document.getElementById("selectedMAR");
+      const hevoprices = [0, 299, 450, 499, 949, 1449];
+      const fivetranPrices = [0, 750, 1315, 1578, 3158, 3896];
+      const marLabels = ['1m', '3m', '4m', '10m', '20m'];
+  
+      inputSlider.addEventListener("input", function() {
+        selectedMAR.textContent = marLabels[inputSlider.value];
+        updateHistograms(hevoprices[inputSlider.value], fivetranPrices[inputSlider.value]);
+      });
+  
+      function updateHistograms(hevoCost, fivetranCost) {
+        const histogramDiv = document.getElementById("histogram");
+        histogramDiv.innerHTML = `
+          <div class="histogram-bar" style="height:${hevoCost * 0.06}px">${hevoCost.toFixed(2)}</div>
+          <div class="histogram-bar" style="height:${fivetranCost * 0.06}px">${fivetranCost.toFixed(2)}</div>
+        `;
+      }
+  
+      // Initialize with default values
+      updateHistograms(hevoprices[2], fivetranPrices[2]);
+    </script>
+  </body>
+  
+  </html>
+  
+  
+
+</html>
