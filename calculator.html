@@ -1,111 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pricing Calculator</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-  }
-  
-  .calculator {
-    border: 1px solid #ccc;
-    padding: 20px;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  
-  .calculator h2 {
-    margin-top: 0;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  select, input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-  }
-  
-  button {
-    background-color: #007BFF;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  #results {
-    margin-top: 15px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .calculator {
+      border: 1px solid #ccc;
+      padding: 20px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .calculator h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #results {
+      margin-top: 15px;
+    }
+  </style>
 </head>
-<body >
-<div class="calculator">
-  <h2>Pricing Calculator</h2>
-  <h3>Hevo Starter plan vs Fivetran Standard plan</h3>
-  <label for="input">Monthly Active R`ows (MAR) </label>
-  
-  <select id="input">
-    <option value="1">1 Million</option>
-    <option value="2">2 Million</option>
-    <option value="3">3 Million</option>
-    <option value="4">4 Million</option>
-  </select>
-  <br></br>
-  <label for="plan">Select Plan:</label>
-  <select id="plan">
-    <option value="fivetran">Fivetran Standard Plan</option>
-  </select>
-  <button onclick="calculate()">Calculate</button>
-  <div id="results"></div>
 
-</div>
+<body>
+  <div class="calculator">
+    <h2>Pricing Calculator</h2>
+    <h3>Hevo Starter plan vs Fivetran Standard plan</h3>
+    <label for="input">Monthly Active R`ows (MAR) </label>
 
-<br>
+    <select id="input">
+      <option value="1">1 Million</option>
+      <option value="2">2 Million</option>
+      <option value="3">3 Million</option>
+      <option value="4">4 Million</option>
+    </select>
+    <br></br>
+    <label for="plan">Select Plan:</label>
+    <select id="plan">
+      <option value="fivetran">Fivetran Standard Plan</option>
+    </select>
+    <button onclick="calculate()">Calculate</button>
+    <div id="results"></div>
 
-<div>
-  Hevo stands out from Fivetran due to its real-time processing approach in data replication. By leveraging Kafka for data processing, Hevo ensures that each individual row from the source system is replicated in near real-time to the destination. This means that changes in the source data become immediately visible in the destination, providing users with up-to-the-moment insights and enabling faster decision-making.
+  </div>
 
-In contrast, Fivetran utilizes batch processing, where data is replicated only after an entire batch is processed, potentially introducing delays and limiting the immediacy of data availability. Hevo's capability to replicate data on a row-wise basis in real-time gives it a distinct advantage for scenarios where timely and accurate data replication is crucial for business operations and analytics.
+  <br>
 
-</div>
-<script>
-  
- function calculate() {
-  const input = parseInt(document.getElementById("input").value);
-  console.log(input)
-  const plan = document.getElementById("plan").value;
+
+  <script>
+
+    function calculate() {
+      const input = parseInt(document.getElementById("input").value);
+      console.log(input)
+      const plan = document.getElementById("plan").value;
 
 
       // Multiply input by 10 for Hevo plan
       let hevoInput
-     hevoInput =(input*1000000*10)/2;
-     console.log(hevoInput)
-    
-    const hevoprices=[0,300,375,450,500]
-    const hevoCost=hevoprices[input]
-    const fivetranPrices = [0, 750, 1052, 1315, 1578];
-    const fivetranCost = fivetranPrices[input];
-    //const hevoCost = (hevoInput / 5000000) * 239;
-  
-    const priceDifference = fivetranCost - hevoCost;
+      hevoInput = (input * 1000000 * 10) / 2;
+      console.log(hevoInput)
 
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = `
+      const hevoprices = [0, 300, 375, 450, 500]
+      const hevoCost = hevoprices[input]
+      const fivetranPrices = [0, 750, 1052, 1315, 1578];
+      const fivetranCost = fivetranPrices[input];
+      //const hevoCost = (hevoInput / 5000000) * 239;
+
+      const priceDifference = fivetranCost - hevoCost;
+
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = `
       <p>Fivetran Cost: $${fivetranCost.toFixed(2)}</p>
       <p>Hevo Cost: $${hevoCost.toFixed(2)}</p>
       <p>Price Difference: $${priceDifference.toFixed(2)}</p>
       <a href="https://hevodata.com/schedule-demo/?step=email" target="_blank">Schedule a Demo with hevo</a>
     `;
-  }
-</script>
+    }
+  </script>
 </body>
+
 </html>
