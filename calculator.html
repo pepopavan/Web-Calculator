@@ -53,19 +53,52 @@
 <body>
   <div class="calculator">
     <h2>Pricing Calculator</h2>
-    <h3>Hevo Starter plan vs Fivetran Standard plan</h3>
-    <label for="input">Monthly Active R`ows (MAR) </label>
+    <h3>Hevo vs Fivetran </h3>
+    <label for="input">Monthly Active Rows (MAR) </label>
 
     <select id="input">
+
       <option value="1">1 Million</option>
-      <option value="2">2 Million</option>
-      <option value="3">3 Million</option>
       <option value="4">4 Million</option>
+      <option value="10">10 Million</option>
+      <option value="20">20 Million</option>
+      <option value="40">40 Million</option>
+      <option value="60">60 Million</option>
+      <option value="80">80 Million</option>
+      <option value="120">120 Million</option>
+      <option value="160">160 Million</option>
+      <option value="200">200 Million</option>
+      <option value="300">300 Million</option>
+      <option value="400">400 Million</option>
+      <option value="600">600 Million</option>
+      <option value="800">800 Million</option>
+      <option value="1000">1000 Million</option>
+      <option value="1200">1200 Million</option>
     </select>
     <br></br>
-    <label for="plan">Select Plan:</label>
+    <label for="Database">Select Source Type</label>
+
+    <select id="Database">
+
+      <option value="1">Databases</option>
+      <option value="2">SaaS</option>
+      <option value="3">Both</option>
+
+    </select>
+    <br></br>
+    <label for="Latency">Select Latency</label>
+
+    <select id="Latency">
+
+      <option value="1">5 mins</option>
+      <option value="2">15 mins</option>
+      <option value="3">1 hour</option>
+
+    </select>
+    <br></br>
+    <label for="plan">Plan:</label>
     <select id="plan">
-      <option value="fivetran">Fivetran Standard Plan</option>
+      <option value="fivetran">Fivetran Plan</option>
     </select>
     <button onclick="calculate()">Calculate</button>
     <div id="results"></div>
@@ -78,23 +111,87 @@
   <script>
 
     function calculate() {
-      const input = parseInt(document.getElementById("input").value);
-      console.log(input)
+      const MAR = parseInt(document.getElementById("input").value);
+      console.log(MAR)
+ 
+      var sourceElement = document.getElementById("Database"); 
+      var DBselected  = sourceElement.options[sourceElement.selectedIndex].textContent;
+      console.log(DBselected);
+      var latencyElement = document.getElementById("Latency");
+      var latencyselected = latencyElement.options[latencyElement.selectedIndex].textContent;
+      console.log(latencyselected);
       const plan = document.getElementById("plan").value;
 
+      var hevoevents
+      var hevoCost
 
-      // Multiply input by 10 for Hevo plan
-      let hevoInput
-      hevoInput = (input * 1000000 * 10) / 2;
-      console.log(hevoInput)
+      if(DBselected == "Databases" || DBselected == "SaaS" || DBselected == "Both" ){
+        hevoevents=MAR*5
+      }
+      // if(DBselected == "SaaS" ){
+      //   hevoevents=MAR*10
+      // }
+      // if(DBselected == "Both" ){
+      //   hevoevents=MAR*7.5
+      // }
 
-      const hevoprices = [0, 300, 375, 450, 500]
-      const hevoCost = hevoprices[input]
-      const fivetranPrices = [0, 750, 1052, 1315, 1578];
-      const fivetranCost = fivetranPrices[input];
-      //const hevoCost = (hevoInput / 5000000) * 239;
+      var hevoevents_arr=[ 1, 5, 20, 50, 100, 200, 300, 400, 600, 800, 1000, 1500, 2000, 3000, 4000, 5000, 6000 ]
+      var hevoprice_arr=[ 0, 299, 499, 949, 1449, 2199, 2599, 2999, 3399, 3999, 4499, 5999, 6999, 8499, 9999, 11499, 12999 ]
+      
+      var price_index=hevoevents_arr.indexOf(hevoevents)
 
-      const priceDifference = fivetranCost - hevoCost;
+      if(price_index!=-1){
+        hevoCost=hevoprice_arr[price_index]
+      }
+
+      var threshold
+
+      if (MAR < 1) {
+        threshold = 0;
+    } else if (MAR === 1) {
+        threshold = 1;
+    } else if (MAR > 1 && MAR <= 2) {
+        threshold = 2;
+    } else if (MAR > 2 && MAR < 10) {
+        threshold = 2;
+    } else if (MAR >= 10 && MAR < 100) {
+        threshold = 10;
+    } else if (MAR >= 100 && MAR < 1000) {
+        threshold = 100;
+    } else if (MAR >= 1000) {
+        threshold = 1000;
+    }
+    
+    var threshold_arr=[ 1, 2, 10, 100, 1000, 10000 ]
+    var starter_base=[ 500, 701.74, 2105.2, 6578.75, 23157.2, 52630 ]
+    var starter_incremental=[ 201.74, 175.43, 49.71, 18.42, 3.27, 2.93 ]
+    var standard_base=[ 750, 1052.6, 3157.8, 9868.13, 23157.2, 52630 ]
+    var standard_incremental=[ 302.6, 263.15, 74.56, 14.77, 3.27, 2.93 ]
+    var enterprise_base=[ 1000, 1403.46, 4210.4, 13157.5, 26315, 52630 ]
+    var enterprise_incremental=[ 403.46, 350.87, 99.41, 14.62, 2.92, 2.93 ]
+
+    var index=threshold_arr.indexOf(threshold)
+    var baseMar
+    var incremental
+
+    if(latencyselected=="5 mins"){
+      baseMar=starter_base[index]
+      incremental=starter_incremental[index]
+    }
+    if(latencyselected=="15 mins"){
+      baseMar=standard_base[index]
+      incremental=standard_incremental[index]
+    }
+    if(latencyselected=="1 hour"){
+      baseMar=enterprise_base[index]
+      incremental=enterprise_incremental[index]
+    }
+
+    var fivetranCost
+
+    fivetranCost=baseMar+(MAR-threshold)*incremental
+
+    const priceDifference = fivetranCost - hevoCost;
 
       const resultsDiv = document.getElementById("results");
       resultsDiv.innerHTML = `
