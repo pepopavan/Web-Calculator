@@ -96,10 +96,7 @@
 
     </select>
     <br></br>
-    <label for="plan">Plan:</label>
-    <select id="plan">
-      <option value="fivetran">Fivetran Plan</option>
-    </select>
+
     <button onclick="calculate()">Calculate</button>
     <div id="results"></div>
 
@@ -120,7 +117,7 @@
       var latencyElement = document.getElementById("Latency");
       var latencyselected = latencyElement.options[latencyElement.selectedIndex].textContent;
       console.log(latencyselected);
-      const plan = document.getElementById("plan").value;
+      //const plan = document.getElementById("plan").value;
 
       var hevoevents
       var hevoCost
